@@ -1,0 +1,6 @@
+[submodule "nginx-01-2"]
+	path = nginx-01-2
+	url = git@github.com:fkmatsuda-fullcycle/nginx-01-2.git
+[submodule "node-01-2"]
+	path = node-01-2
+	url = git@github.com:fkmatsuda-fullcycle/node-01-2.git

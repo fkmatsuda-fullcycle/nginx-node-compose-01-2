@@ -1,0 +1,49 @@
+version: '3'
+
+networks:
+  node-network:
+    driver: bridge
+
+services:
+  nginx:
+    build:
+      context: ./nginx-01-2
+      dockerfile: ./Dockerfile
+    image: fkmatsuda/nginx-01-2:latest
+    container_name: nginx
+    networks:
+      - node-network
+    tty: true
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+  app:
+    build: 
+      context: ./node-01-2
+      dockerfile: ./Dockerfile
+    image: fkmatsuda/node-01-2:latest
+    container_name: app
+    environment:
+      - PRODUCTION_USERNAME=root
+      - PRODUCTION_PASSWORD=secret
+    networks:
+      - node-network
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: always
+    tty: true
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--innodb-use-native-aio=0']
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=nodedb
+    networks:
+      - node-network
